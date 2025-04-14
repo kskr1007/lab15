@@ -15,8 +15,8 @@ public class EnigmaFrame extends JFrame {
     private JComboBox<Integer> inner;
     private JComboBox<Integer> middle;
     private JComboBox<Integer> outer;
-    private JTextArea input = new JTextArea(5,20);
-    private JTextArea output = new JTextArea(5,20);
+    private JTextArea input = new JTextArea(30,30);
+    private JTextArea output = new JTextArea(30,30);
     private JButton encrypt = new JButton("encrypt");
     private JButton decrypt = new JButton("decrypt");
     private final Integer[] units ={1,2,3};
@@ -51,7 +51,7 @@ public class EnigmaFrame extends JFrame {
         this.pack();
         this.setVisible(true);
         setUpEncrypt();
-        //setUpDecrypt(); // Similarly, call setUpDecrypt() for the decrypt button
+        setUpDecrypt();
     }
     
     public void setUpEncrypt() {
@@ -70,6 +70,21 @@ public class EnigmaFrame extends JFrame {
         });
     }
 
+    public void setUpDecrypt() {
+        decrypt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int in = (int)inner.getSelectedItem();
+                int mid = (int) middle.getSelectedItem();
+                int out = (int) outer.getSelectedItem();
+                String initialString = initial.getText();
+                String inputMessage = input.getText();
+                Enigma enigma = new Enigma(in, mid, out, initialString);
+                String finalMessage = enigma.decrypt(inputMessage);
+                output.setText(finalMessage);
+            }
+        });
+    }
     
     
     
