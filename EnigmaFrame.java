@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,11 +11,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class EnigmaFrame extends JFrame {
-
     private JTextField initial;
     private JComboBox<Integer> inner;
     private JComboBox<Integer> middle;
-    private JComboBox<Integer> out;
+    private JComboBox<Integer> outer;
     private JTextArea input = new JTextArea(5,20);
     private JTextArea output = new JTextArea(5,20);
     private JButton encrypt = new JButton("encrypt");
@@ -25,23 +23,25 @@ public class EnigmaFrame extends JFrame {
     
     public EnigmaFrame() {
         super();
-        initial = new JTextField(" ", 10);
+        initial = new JTextField("", 3);
         inner = new JComboBox<Integer>(units);
-        out   = new JComboBox<Integer>(units);
-        middle   = new JComboBox<Integer>(units);
+        outer = new JComboBox<Integer>(units);
+        middle = new JComboBox<Integer>(units);
         JPanel dpanel = new JPanel(new FlowLayout());
-        JFrame frame = new JFrame();
-
         dpanel.add(new JLabel("inner"));
         dpanel.add(inner);
         dpanel.add(new JLabel("middle"));
         dpanel.add(middle);
         dpanel.add(new JLabel("out"));
-        dpanel.add(out);
+        dpanel.add(outer);
         dpanel.add(new JLabel("Initial Positions"));
         dpanel.add(initial);
         dpanel.add(encrypt);
+        encrypt.setEnabled(true);
+        encrypt.setVisible(true);
         dpanel.add(decrypt);
+        decrypt.setEnabled(true);
+        decrypt.setVisible(true);
         dpanel.add(new JLabel("input"));
         dpanel.add(input);
         dpanel.add(new JLabel("output"));
@@ -49,24 +49,28 @@ public class EnigmaFrame extends JFrame {
         this.add(dpanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        this.add(dpanel, BorderLayout.CENTER);
-        setUp();
+        this.setVisible(true);
+        setUpEncrypt();
+        //setUpDecrypt(); // Similarly, call setUpDecrypt() for the decrypt button
     }
-    public void setUp(){
-        ActionListener listen = new ActionListener() {
+    
+    public void setUpEncrypt() {
+        encrypt.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
-                int innerVal = (int) inner.getSelectedItem();
-                int middleVal = (int) middle.getSelectedItem();
-                int outerVal = (int) out.getSelectedItem();
+            public void actionPerformed(ActionEvent e) {
+                int in = (int)inner.getSelectedItem();
+                int mid = (int) middle.getSelectedItem();
+                int out = (int) outer.getSelectedItem();
                 String initialString = initial.getText();
-                Enigma enigma = new Enigma(innerVal, middleVal, outerVal, initialString);
-                String encrypted = enigma.encrypt(input.getText());
-                output.setText(encrypted);
+                String inputMessage = input.getText();
+                Enigma enigma = new Enigma(in, mid, out, initialString);
+                String finalMessage = enigma.encrypt(inputMessage);
+                output.setText(finalMessage);
             }
-        };
-        encrypt.addActionListener(listen);
+        });
     }
+
+    
     
     
 }
